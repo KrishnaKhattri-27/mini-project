@@ -24,6 +24,28 @@ float findCostForTwoElements(int cost1[2], int cost2[2])
             ((1 - (1.0 / c1)) * (1 - (1.0 / c2))));
 }
 
+float findCostForThreeElements(int cost1[2], int cost2[2], int cost3[2])
+{
+    int c1 = cost1[0];
+    int c2 = cost2[0];
+    int c3 = cost3[0];
+    int c4 = cost1[1];
+    int c5 = cost2[1];
+    int c6 = cost3[1];
+
+    return ((
+                ((1 - (1.0 / c1)) * (1 - (1.0 / c2)) * (1 - (1.0 / c3))) +
+                ((1 - (1.0 / c1)) * (1 - (1.0 / c2)) * (1.0 / c3) * (1 + c6)) +
+                ((1 - (1.0 / c1)) * (1.0 / c2) * (1 - (1.0 / c3)) * (1 + c5)) +
+                ((1 - (1.0 / c1)) * (1.0 / c2) * (1.0 / c3) * (1 + min(c5, c6))) +
+                ((1.0 / c1) * (1 - (1.0 / c2)) * (1 - (1.0 / c3)) * (1 + c4)) +
+                ((1.0 / c1) * (1 - (1.0 / c2)) * (1.0 / c3) * (1 + min(c4, c6))) +
+                ((1.0 / c1) * (1.0 / c2) * (1 - (1.0 / c3)) * (1 + min(c4, c5))) +
+                ((1.0 / c1) * (1.0 / c2) * (1.0 / c3) * (1 + min(min(c4, c5), c6))))
+            /
+            ((1 - (1.0 / c1)) * (1 - (1.0 / c2)) * (1 - (1.0 / c3))));
+}
+
 void storeCombinations(int arr[][2], int n, int **combinations, int *sizes, int *totalCombinations)
 {
     int count = 0;
@@ -65,6 +87,17 @@ void processCombinations(int **combinations, int *sizes, int totalCombinations, 
             int node1 = combinations[i][0];
             int node2 = combinations[i][1];
             float val = findCostForTwoElements(arr[node1 - 1], arr[node2 - 1]);
+            if (val < minimum)
+            {
+                minimum = val;
+            }
+        }
+         else if (sizes[i] == 3) 
+        {
+            int node1 = combinations[i][0];
+            int node2 = combinations[i][1];
+            int node3 = combinations[i][2];
+            float val = findCostForThreeElements(arr[node1 - 1], arr[node2 - 1], arr[node3 - 1]);
             if (val < minimum)
             {
                 minimum = val;
